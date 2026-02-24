@@ -37,8 +37,6 @@ class Estudiante
     {
         $this->carrera = $carrera;
     }
-
-    // alias for compatibility with view/controller naming
     public function getCalificacion()
     {
         return $this->getCalificacionFinal();

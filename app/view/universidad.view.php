@@ -76,14 +76,31 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <?php foreach ($carreras as $carrera): ?>
-                            <?php foreach ($carrera->getEstudiantes() as $estudiante): ?>
-                                <tr>
-                                    <td><?= $estudiante->getNombre() ?></td>
-                                    <td><?= $carrera->getNombre() ?></td>
-                                    <td><?= $estudiante->getCalificacion() ?></td>
-                                </tr>
-                            <?php endforeach; ?>
+                            <!--- si los estudiantes no son null, se listan --->
+                        <?php if ($carrera->getEstudiantes() !== null): ?>
+                        <?php foreach ($carrera->getEstudiantes() as $estudiante): ?>
+                        <tr>
+                            <td>
+                                <?= $estudiante->getNombre() ?>
+                            </td>
+                            <td>
+                                <?= $carrera->getNombre() ?>
+                            </td>
+                            <td>
+                                <?= $estudiante->getCalificacion() ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                No hay estudiantes registrados en esta carrera.
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -149,11 +166,13 @@
                     <?php foreach ($carreras as $carrera): ?>
                         <?php
                         $promedio = $carrera->getPromedioCalEstudiantes();
+                        if ($carrera->getEstudiantes() !== null):
                         foreach ($carrera->getEstudiantes() as $estudiante):
                             if ($estudiante->getCalificacionFinal() > $promedio):
                                 ?>
                                 <li class="list-group-item d-flex justify-content-between">
                                     <?= $estudiante->getNombre() ?>
+                                    <?= $carrera->getNombre() ?>
                                     <span class="badge bg-success">
                                         <?= $estudiante->getCalificacionFinal() ?>
                                     </span>
@@ -161,6 +180,7 @@
                                 <?php
                             endif;
                         endforeach;
+                        endif;
                         ?>
                     <?php endforeach; ?>
                 </ul>

@@ -11,8 +11,7 @@ class Carrera
     public function __construct($nombre)
     {
         $this->nombre = $nombre;
-
-
+        $this->estudiantes = [];
     }
 
     public function getNombre()
@@ -36,6 +35,12 @@ class Carrera
     {
 
         $sumatoria = 0;
+
+        if ($this->estudiantes) {
+            $cantidadEstudiantes = count($this->estudiantes);
+        } else {
+            return 0;
+        }
         $cantidadEstudiantes = count($this->estudiantes);
         $promedio = 0;
 
