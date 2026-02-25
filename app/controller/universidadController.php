@@ -1,94 +1,85 @@
 <?php
 
-/*Usando los conocimientos adquiridos hasta el momento en la materia, crear una aplicación en
-PHP que realice las siguientes operaciones:
-1. Dado un arreglo de estudiantes donde cada uno tiene nombre, calificación final y carrera,
-realiza las siguientes operaciones en PHP:
-a. Calcular el promedio de calificaciones por cada carrera.
-b. Determinar cuál es la carrera que tiene el promedio de calificaciones más bajo (la
-de mayor dificultad académica).
-c. Listar los nombres de los estudiantes que tienen una calificacion superioir al promedio de su
-respectiva carrera */
 namespace App\Controller;
 
 use App\Model\Estudiante;
 use App\Model\Carrera;
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class UniversidadController
 {
-    public function index()
+    private function inicializarCarreras()
     {
+        if (isset($_SESSION['carreras']) && is_array($_SESSION['carreras'])) {
+            return $_SESSION['carreras'];
+        }
 
         $sistemas = new Carrera("Ingenieria de Sistemas");
         $edfisica = new Carrera("Educacion Física");
         $adminempresas = new Carrera("Administracion de empresas");
         $veterinaria = new Carrera("Veterinaria");
+        /*
+                $sistemas->addEstudiante(new Estudiante("Andres Santiago", 5));
+                $sistemas->addEstudiante(new Estudiante("Alejandro", 1.6));
+                $sistemas->addEstudiante(new Estudiante("Raul", 3));
+                $sistemas->addEstudiante(new Estudiante("Pedro", 2));
+                $sistemas->addEstudiante(new Estudiante("Picapiedra", 1.7));
 
+                $edfisica->addEstudiante(new Estudiante("Pablo", 3.2));
+                $edfisica->addEstudiante(new Estudiante("Pepa", 4.1));
+                $edfisica->addEstudiante(new Estudiante("Pepito", 4.9));
+                $edfisica->addEstudiante(new Estudiante("Alexander", 3.9));
+                $edfisica->addEstudiante(new Estudiante("Arnold", 4.4));
+
+                $adminempresas->addEstudiante(new Estudiante("Felipe", 2.2));
+                $adminempresas->addEstudiante(new Estudiante("Federico", 4.2));
+                $adminempresas->addEstudiante(new Estudiante("Fernando", 3.5));
+                $adminempresas->addEstudiante(new Estudiante("Federica", 1.8));
+                $adminempresas->addEstudiante(new Estudiante("Fabiola", 2.6));
+
+                $veterinaria->addEstudiante(new Estudiante("Dawid", 1.1));
+                $veterinaria->addEstudiante(new Estudiante("Diana", 3.9));
+                $veterinaria->addEstudiante(new Estudiante("Diego", 4.5));
+                $veterinaria->addEstudiante(new Estudiante("Domenica", 2.8));
+                $veterinaria->addEstudiante(new Estudiante("Domenico", 3.2));
+        */
         $carreras = [$sistemas, $edfisica, $adminempresas, $veterinaria];
+        $_SESSION['carreras'] = $carreras;
 
-
-        $estudiante1 = new Estudiante("Andres Santiago", 5);
-        $estudiante2 = new Estudiante("Alejandro", 1.6);
-        $estudiante3 = new Estudiante("Raul", 3);
-        $estudiante4 = new Estudiante("Pedro", 2);
-        $estudiante5 = new Estudiante("Picapiedra", 1.7);
-
-        $estudiante6 = new Estudiante("Pablo", 3.2);
-        $estudiante7 = new Estudiante("Pepa", 4.1);
-        $estudiante8 = new Estudiante("Pepito", 4.9);
-        $estudiante9 = new Estudiante("Alexander", 3.9);
-        $estudiante10 = new Estudiante("Arnold", 4.4);
-
-        $estudiante11 = new Estudiante("Felipe", 2.2);
-        $estudiante12 = new Estudiante("Federico", 4.2);
-        $estudiante13 = new Estudiante("Fernando", 3.5);
-        $estudiante14 = new Estudiante("Federica", 1.8);
-        $estudiante15 = new Estudiante("Fabiola", 2.6);
-
-        $estudiante16 = new Estudiante("Dawid", 1.1);
-        $estudiante17 = new Estudiante("Diana", 3.9);
-        $estudiante18 = new Estudiante("Diego", 4.5);
-        $estudiante19 = new Estudiante("Domenica", 2.8);
-        $estudiante20 = new Estudiante("Domenico", 3.2);
-
-        $sistemas->addEstudiante($estudiante1);
-        $sistemas->addEstudiante($estudiante2);
-        $sistemas->addEstudiante($estudiante3);
-        $sistemas->addEstudiante($estudiante4);
-        $sistemas->addEstudiante($estudiante5);
-
-        $edfisica->addEstudiante($estudiante6);
-        $edfisica->addEstudiante($estudiante7);
-        $edfisica->addEstudiante($estudiante8);
-        $edfisica->addEstudiante($estudiante9);
-        $edfisica->addEstudiante($estudiante10);
-
-        $adminempresas->addEstudiante($estudiante11);
-        $adminempresas->addEstudiante($estudiante12);
-        $adminempresas->addEstudiante($estudiante13);
-        $adminempresas->addEstudiante($estudiante14);
-        $adminempresas->addEstudiante($estudiante15);
-
-        $veterinaria->addEstudiante($estudiante16);
-        $veterinaria->addEstudiante($estudiante17);
-        $veterinaria->addEstudiante($estudiante18);
-        $veterinaria->addEstudiante($estudiante19);
-        $veterinaria->addEstudiante($estudiante20);
-
-        // Lógica de negocio
-        // b. Determinar la carrera con mayor dificultad académica (promedio más bajo)
-        $carreraMasDificil = $this->obtenerCarreraMasDificil($carreras);
-
-        // c. Obtener estudiantes con calificación superior al promedio de su carrera
-        $estudiantesDestacados = $this->obtenerEstudiantesDestacados($carreras);
-
-        require __DIR__ . '/../View/universidad.view.php';
+        return $carreras;
     }
 
-    /**
-     * Obtiene la carrera con el promedio más bajo (mayor dificultad académica)
-     */
+    private function agregarEstudiante()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre'], $_POST['calificacion'], $_POST['carrera'])) {
+            $nombre = trim($_POST['nombre']);
+            $calificacion = floatval($_POST['calificacion']);
+            $nombreCarrera = trim($_POST['carrera']);
+
+            if ($nombre === '' || $calificacion < 0 || $calificacion > 5) {
+                $_SESSION['error'] = 'Datos inválidos.';
+                return;
+            }
+
+            $carreras = $this->inicializarCarreras();
+
+            foreach ($carreras as $carrera) {
+                if ($carrera->getNombre() === $nombreCarrera) {
+                    $nuevo = new Estudiante($nombre, $calificacion);
+                    $carrera->addEstudiante($nuevo);
+                    $_SESSION['carreras'] = $carreras;
+                    $_SESSION['success'] = "Estudiante agregado correctamente.";
+                    return;
+                }
+            }
+            
+            $_SESSION['error'] = 'Carrera no encontrada.';
+        }
+    }
+
     private function obtenerCarreraMasDificil($carreras)
     {
         $carreraMasDificil = null;
@@ -105,9 +96,6 @@ class UniversidadController
         return $carreraMasDificil;
     }
 
-    /**
-     * Obtiene todos los estudiantes cuya calificación supera el promedio de su carrera
-     */
     private function obtenerEstudiantesDestacados($carreras)
     {
         $estudiantesDestacados = [];
@@ -115,14 +103,10 @@ class UniversidadController
         foreach ($carreras as $carrera) {
             $promedio = $carrera->getPromedioCalEstudiantes();
             $estudiantes = $carrera->getEstudiantes();
-
             if ($estudiantes) {
                 foreach ($estudiantes as $estudiante) {
                     if ($estudiante->getCalificacionFinal() > $promedio) {
-                        $estudiantesDestacados[] = [
-                            'estudiante' => $estudiante,
-                            'carrera' => $carrera
-                        ];
+                        $estudiantesDestacados[] = ['estudiante' => $estudiante, 'carrera' => $carrera];
                     }
                 }
             }
@@ -131,4 +115,20 @@ class UniversidadController
         return $estudiantesDestacados;
     }
 
+    public function index()
+    {
+        // Manejar reinicio de datos (botón Reiniciar)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reset') {
+            unset($_SESSION['carreras']);
+            $_SESSION['success'] = 'Datos reiniciados.';
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+
+        $this->agregarEstudiante();
+        $carreras = $this->inicializarCarreras();
+        $carreraMasDificil = $this->obtenerCarreraMasDificil($carreras);
+        $estudiantesDestacados = $this->obtenerEstudiantesDestacados($carreras);
+        require __DIR__ . '/../View/universidad.view.php';
+    }
 }
