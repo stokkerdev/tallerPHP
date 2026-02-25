@@ -13,9 +13,8 @@
 
         <h1 class="text-center mb-4">Sistema de Gestión Académica</h1>
 
-        <!-- ========================= -->
-        <!-- 1️⃣ FORMULARIO -->
-        <!-- ========================= -->
+        <!-- ingreso de estudiantes -->
+
 
         <div class="card shadow mb-4">
             <div class="card-header bg-primary text-white">
@@ -78,28 +77,28 @@
                     <tbody>
 
                         <?php foreach ($carreras as $carrera): ?>
-                            <!--- si los estudiantes no son null, se listan --->
-                        <?php if ($carrera->getEstudiantes() !== null): ?>
-                        <?php foreach ($carrera->getEstudiantes() as $estudiante): ?>
-                        <tr>
-                            <td>
-                                <?= $estudiante->getNombre() ?>
-                            </td>
-                            <td>
-                                <?= $carrera->getNombre() ?>
-                            </td>
-                            <td>
-                                <?= $estudiante->getCalificacion() ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php else: ?>
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">
-                                No hay estudiantes registrados en esta carrera.
-                            </td>
-                        </tr>
-                        <?php endif; ?>
+
+                            <?php if ($carrera->getEstudiantes() !== null): ?>
+                                <?php foreach ($carrera->getEstudiantes() as $estudiante): ?>
+                                    <tr>
+                                        <td>
+                                            <?= $estudiante->getNombre() ?>
+                                        </td>
+                                        <td>
+                                            <?= $carrera->getNombre() ?>
+                                        </td>
+                                        <td>
+                                            <?= $estudiante->getCalificacion() ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">
+                                        No hay estudiantes registrados en esta carrera.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
 
                         <?php endforeach; ?>
                     </tbody>
@@ -108,10 +107,6 @@
             </div>
         </div>
 
-
-        <!-- ========================= -->
-        <!-- 3️⃣ PROMEDIOS -->
-        <!-- ========================= -->
 
         <div class="card shadow mb-4">
             <div class="card-header bg-info text-white">
@@ -136,25 +131,15 @@
 
             </div>
         </div>
-
-
-        <!-- ========================= -->
-        <!-- 4️⃣ CARRERA MÁS DIFÍCIL -->
-        <!-- ========================= -->
-
-
         <div class="alert alert-danger shadow">
             <h5 class="mb-0">
-                Carrera con mayor dificultad académica:
-                <strong>Carrera mas dificil</strong>
+                        <?php if ($carreraMasDificil): ?>
+                            <strong>Carrera más difícil: <?= $carreraMasDificil->getNombre() ?></strong>
+                        <?php else: ?>
+                            <strong>No hay carreras registradas</strong>
+                        <?php endif; ?>
             </h5>
         </div>
-
-
-
-        <!-- ========================= -->
-        <!-- 5️⃣ ESTUDIANTES SOBRE PROMEDIO -->
-        <!-- ========================= -->
 
         <div class="card shadow mt-4">
             <div class="card-header bg-warning">
@@ -167,19 +152,19 @@
                         <?php
                         $promedio = $carrera->getPromedioCalEstudiantes();
                         if ($carrera->getEstudiantes() !== null):
-                        foreach ($carrera->getEstudiantes() as $estudiante):
-                            if ($estudiante->getCalificacionFinal() > $promedio):
-                                ?>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <?= $estudiante->getNombre() ?>
-                                    <?= $carrera->getNombre() ?>
-                                    <span class="badge bg-success">
-                                        <?= $estudiante->getCalificacionFinal() ?>
-                                    </span>
-                                </li>
-                                <?php
-                            endif;
-                        endforeach;
+                            foreach ($carrera->getEstudiantes() as $estudiante):
+                                if ($estudiante->getCalificacionFinal() > $promedio):
+                                    ?>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <?= $estudiante->getNombre() ?> -
+                                        <?= $carrera->getNombre() ?>
+                                        <span class="badge bg-success">
+                                            <?= $estudiante->getCalificacionFinal() ?>
+                                        </span>
+                                    </li>
+                                    <?php
+                                endif;
+                            endforeach;
                         endif;
                         ?>
                     <?php endforeach; ?>
