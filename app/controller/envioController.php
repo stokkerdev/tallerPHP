@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Model\Envio;
 use App\Model\Mensajera;
+use App\Service\generarEmail;
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -71,9 +73,37 @@ class EnvioController
         return $empresa;
     }
 
+    public function enviarEmail()
+    {
+        $this->agregarEnvio();
+        $envios = $this->inicializarEnvios();
+        $empresa = $this->construirEmpresa($envios);
+
+        $totalEntregados = $empresa->getCostoTotalEntregados();
+        $ciudadMayorPeso = $empresa->ciudadMayorPeso();
+        $pesoTotalCiudadMayorPeso = $empresa->getPesoTotalCiudad($ciudadMayorPeso);
+
+
+        $mejorTransportista = $empresa->mejorTransportista();
+        $entregasMejorTransportista = $empresa->getCantidadEntregas($mejorTransportista);
+
+        ob_start();
+        require __DIR__ . '/../View/envios.view.php';
+        $htmlContent = ob_get_clean();
+
+        $emailService = new generarEmail();
+        $emailService->sendReport('stokkerma@gmail.com', 'Reporte de Envíos', $htmlContent);
+    }
+
     public function index()
     {
-        // Manejar reinicio de datos (botón Reiniciar)
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'enviar_email') {
+            $this->enviarEmail();
+            return;
+        }
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reset') {
             unset($_SESSION['envios']);
             $_SESSION['success'] = 'Datos reiniciados.';

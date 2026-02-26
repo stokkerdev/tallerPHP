@@ -178,7 +178,14 @@
                 <?php endif; ?>
             </div>
         </div>
-
+        <form method="POST" class="d-flex gap-2 justify-content-center my-3">
+            <button type="submit" name="action" value="descargar_pdf" class="btn btn-info">
+                Descargar reporte en PDF
+            </button>
+            <button type="submit" name="action" value="enviar_email" class="btn btn-info">
+                Enviar reporte por correo
+            </button>
+        </form>
 
 
     </div>
