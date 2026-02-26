@@ -21,7 +21,10 @@ class UniversidadController
         $edfisica = new Carrera("Educacion Física");
         $adminempresas = new Carrera("Administracion de empresas");
         $veterinaria = new Carrera("Veterinaria");
-        /*
+
+        $carreras = [$sistemas, $edfisica, $adminempresas, $veterinaria];
+
+        
                 $sistemas->addEstudiante(new Estudiante("Andres Santiago", 5));
                 $sistemas->addEstudiante(new Estudiante("Alejandro", 1.6));
                 $sistemas->addEstudiante(new Estudiante("Raul", 3));
@@ -45,8 +48,7 @@ class UniversidadController
                 $veterinaria->addEstudiante(new Estudiante("Diego", 4.5));
                 $veterinaria->addEstudiante(new Estudiante("Domenica", 2.8));
                 $veterinaria->addEstudiante(new Estudiante("Domenico", 3.2));
-        */
-        $carreras = [$sistemas, $edfisica, $adminempresas, $veterinaria];
+        
         $_SESSION['carreras'] = $carreras;
 
         return $carreras;
@@ -76,11 +78,11 @@ class UniversidadController
                 }
             }
             
-            $_SESSION['error'] = 'Carrera no encontrada.';
+            $_SESSION['error'] = 'Revisar que los datos esten bien ingresados';
         }
     }
 
-    private function obtenerCarreraMasDificil($carreras)
+    private function getCarreraMasDificil($carreras)
     {
         $carreraMasDificil = null;
         $promedioMinimo = PHP_FLOAT_MAX;
@@ -96,7 +98,7 @@ class UniversidadController
         return $carreraMasDificil;
     }
 
-    private function obtenerEstudiantesDestacados($carreras)
+    private function getMejoresEstudiantes($carreras)
     {
         $estudiantesDestacados = [];
 
@@ -127,8 +129,8 @@ class UniversidadController
 
         $this->agregarEstudiante();
         $carreras = $this->inicializarCarreras();
-        $carreraMasDificil = $this->obtenerCarreraMasDificil($carreras);
-        $estudiantesDestacados = $this->obtenerEstudiantesDestacados($carreras);
+        $carreraMasDificil = $this->getCarreraMasDificil($carreras);
+        $estudiantesDestacados = $this->getMejoresEstudiantes($carreras);
         require __DIR__ . '/../View/universidad.view.php';
     }
 }
