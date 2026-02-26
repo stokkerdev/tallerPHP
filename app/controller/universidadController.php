@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\Estudiante;
 use App\Model\Carrera;
 use App\Service\generarPDF;
+use App\Service\generarEmail;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -133,8 +134,28 @@ class UniversidadController
         $pdfGenerator->generarPDF($html, 'reporte_estudiantes.pdf');
     }
 
+    public function enviarEmail()
+    {
+        $this->agregarEstudiante();
+        $carreras = $this->inicializarCarreras();
+        $carreraMasDificil = $this->getCarreraMasDificil($carreras);
+        $estudiantesDestacados = $this->getMejoresEstudiantes($carreras);
+
+        ob_start();
+        require __DIR__ . '/../View/universidad.view.php';
+        $htmlContent = ob_get_clean();
+
+        $emailService = new generarEmail();
+        $emailService->sendReport('stokkerma@gmail.com', 'Reporte de Estudiantes', $htmlContent);
+    }
+
     public function index()
     {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'enviar_email') {
+            $this->enviarEmail();
+            return;
+        }
 
         // Manejar descarga de PDF
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'descargar_pdf') {
