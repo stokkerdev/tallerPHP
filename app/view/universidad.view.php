@@ -11,7 +11,10 @@
 
     <div class="container mt-5">
 
-        <h1 class="text-center mb-4">Sistema de estudiantes</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-center flex-grow-1">Sistema de estudiantes</h1>
+
+        </div>
         <?php if (session_status() === PHP_SESSION_NONE) {
             session_start();
         } ?>
@@ -184,6 +187,17 @@
 
             </div>
         </div>
+
+        <form method="POST" class="d-flex gap-2 justify-content-center my-3">
+            <button type="submit" name="action" value="descargar_pdf" class="btn btn-info">
+                Descargar reporte en PDF
+            </button>
+            <button type="submit" name="action" value="enviar_email" class="btn btn-info">
+                Enviar reporte por correo
+            </button>
+        </form>
+
+
 
     </div>
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\Estudiante;
 use App\Model\Carrera;
+use App\Service\generarPDF;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -24,31 +25,31 @@ class UniversidadController
 
         $carreras = [$sistemas, $edfisica, $adminempresas, $veterinaria];
 
-        
-                $sistemas->addEstudiante(new Estudiante("Andres Santiago", 5));
-                $sistemas->addEstudiante(new Estudiante("Alejandro", 1.6));
-                $sistemas->addEstudiante(new Estudiante("Raul", 3));
-                $sistemas->addEstudiante(new Estudiante("Pedro", 2));
-                $sistemas->addEstudiante(new Estudiante("Picapiedra", 1.7));
 
-                $edfisica->addEstudiante(new Estudiante("Pablo", 3.2));
-                $edfisica->addEstudiante(new Estudiante("Pepa", 4.1));
-                $edfisica->addEstudiante(new Estudiante("Pepito", 4.9));
-                $edfisica->addEstudiante(new Estudiante("Alexander", 3.9));
-                $edfisica->addEstudiante(new Estudiante("Arnold", 4.4));
+        $sistemas->addEstudiante(new Estudiante("Andres Santiago", 5));
+        $sistemas->addEstudiante(new Estudiante("Alejandro", 1.6));
+        $sistemas->addEstudiante(new Estudiante("Raul", 3));
+        $sistemas->addEstudiante(new Estudiante("Pedro", 2));
+        $sistemas->addEstudiante(new Estudiante("Picapiedra", 1.7));
 
-                $adminempresas->addEstudiante(new Estudiante("Felipe", 2.2));
-                $adminempresas->addEstudiante(new Estudiante("Federico", 4.2));
-                $adminempresas->addEstudiante(new Estudiante("Fernando", 3.5));
-                $adminempresas->addEstudiante(new Estudiante("Federica", 1.8));
-                $adminempresas->addEstudiante(new Estudiante("Fabiola", 2.6));
+        $edfisica->addEstudiante(new Estudiante("Pablo", 3.2));
+        $edfisica->addEstudiante(new Estudiante("Pepa", 4.1));
+        $edfisica->addEstudiante(new Estudiante("Pepito", 4.9));
+        $edfisica->addEstudiante(new Estudiante("Alexander", 3.9));
+        $edfisica->addEstudiante(new Estudiante("Arnold", 4.4));
 
-                $veterinaria->addEstudiante(new Estudiante("Dawid", 1.1));
-                $veterinaria->addEstudiante(new Estudiante("Diana", 3.9));
-                $veterinaria->addEstudiante(new Estudiante("Diego", 4.5));
-                $veterinaria->addEstudiante(new Estudiante("Domenica", 2.8));
-                $veterinaria->addEstudiante(new Estudiante("Domenico", 3.2));
-        
+        $adminempresas->addEstudiante(new Estudiante("Felipe", 2.2));
+        $adminempresas->addEstudiante(new Estudiante("Federico", 4.2));
+        $adminempresas->addEstudiante(new Estudiante("Fernando", 3.5));
+        $adminempresas->addEstudiante(new Estudiante("Federica", 1.8));
+        $adminempresas->addEstudiante(new Estudiante("Fabiola", 2.6));
+
+        $veterinaria->addEstudiante(new Estudiante("Dawid", 1.1));
+        $veterinaria->addEstudiante(new Estudiante("Diana", 3.9));
+        $veterinaria->addEstudiante(new Estudiante("Diego", 4.5));
+        $veterinaria->addEstudiante(new Estudiante("Domenica", 2.8));
+        $veterinaria->addEstudiante(new Estudiante("Domenico", 3.2));
+
         $_SESSION['carreras'] = $carreras;
 
         return $carreras;
@@ -77,7 +78,7 @@ class UniversidadController
                     return;
                 }
             }
-            
+
             $_SESSION['error'] = 'Revisar que los datos esten bien ingresados';
         }
     }
@@ -117,8 +118,30 @@ class UniversidadController
         return $estudiantesDestacados;
     }
 
+    public function descargarPDF()
+    {
+        $this->agregarEstudiante();
+        $carreras = $this->inicializarCarreras();
+        $carreraMasDificil = $this->getCarreraMasDificil($carreras);
+        $estudiantesDestacados = $this->getMejoresEstudiantes($carreras);
+
+        ob_start();
+        require __DIR__ . '/../View/universidad.view.php';
+        $html = ob_get_clean();
+
+        $pdfGenerator = new generarPDF();
+        $pdfGenerator->generarPDF($html, 'reporte_estudiantes.pdf');
+    }
+
     public function index()
     {
+
+        // Manejar descarga de PDF
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'descargar_pdf') {
+            $this->descargarPDF();
+            return;
+        }
+
         // Manejar reinicio de datos (botón Reiniciar)
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reset') {
             unset($_SESSION['carreras']);
