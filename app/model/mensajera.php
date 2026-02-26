@@ -63,4 +63,30 @@ class Mensajera
         return key($conteo);
     }
 
+    public function getCantidadEntregas($transportista)
+    {
+        $conteo = 0;
+
+        foreach ($this->arregloEnvios as $envio) {
+            if ($envio->getEstado() === "entregado" && $envio->getTransportista() === $transportista) {
+                $conteo++;
+            }
+        }
+
+        return $conteo;
+    }
+
+
+    public function getPesoTotalCiudad($ciudad)
+    {
+        $pesoTotal = 0;
+
+        foreach ($this->arregloEnvios as $envio) {
+            if ($envio->getDestino() === $ciudad) {
+                $pesoTotal += $envio->getPeso();
+            }
+        }
+
+        return $pesoTotal;
+    }
 }
