@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Envíos</title>
+    <title>Sistema de envios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -11,7 +11,7 @@
 
     <div class="container mt-5">
 
-        <h1 class="text-center mb-4">Sistema de Mensajería</h1>
+        <h1 class="text-center mb-4">Sistema de envios</h1>
 
 
         <?php if (session_status() === PHP_SESSION_NONE) {
@@ -164,7 +164,7 @@
             </div>
         </div>
 
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-header bg-secondary text-white">
                 Transportista con más entregas exitosas:
 
@@ -174,7 +174,7 @@
                 <?php if (empty($mejorTransportista)): ?>
                     <p class="text-center">No hay envios registrados.</p>
                 <?php else: ?>
-                    <h2 class="text-secondary"><?= $mejorTransportista?> : <?= $entregasMejorTransportista ?></h2>
+                    <h2 class="text-secondary"><?= $mejorTransportista ?> : <?= $entregasMejorTransportista ?></h2>
                 <?php endif; ?>
             </div>
         </div>

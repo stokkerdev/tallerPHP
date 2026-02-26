@@ -31,6 +31,8 @@ class Carrera
         $estudiante->setCarrera($this);
     }
 
+
+    //punto A , Para sacarle el promedio a cada carrera
     public function getPromedioCalEstudiantes()
     {
 
@@ -52,9 +54,10 @@ class Carrera
         return $promedio;
     }
 
-    /*c. Listar los nombres de los estudiantes que tienen una calificacion superioir al promedio de su
-  respectiva carrera */
+    //punto B, esta en el controlador porque no es responsabilidad de la clase caarrera
 
+
+    //punto C, muestra a los estudiantes que tienen una calificación superior al promedio de su carrera
     public function mejoresEstudiantes()
     {
         $prom = $this->getPromedioCalEstudiantes();

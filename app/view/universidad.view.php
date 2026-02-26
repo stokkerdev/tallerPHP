@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Académico</title>
+    <title>Sistema Estudiantes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -11,7 +11,7 @@
 
     <div class="container mt-5">
 
-        <h1 class="text-center mb-4">Sistema de Gestión Académica</h1>
+        <h1 class="text-center mb-4">Sistema de estudiantes</h1>
         <?php if (session_status() === PHP_SESSION_NONE) {
             session_start();
         } ?>
