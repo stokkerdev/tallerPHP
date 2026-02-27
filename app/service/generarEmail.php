@@ -20,7 +20,7 @@ class generarEmail
     public function sendReport(string $to, string $subject, string $htmlContent): void
     {
         $email = (new Email())
-            ->from('noreply@tallerphp.local')
+            ->from('stokkercorreos@gmail.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlContent);

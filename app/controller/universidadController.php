@@ -26,7 +26,7 @@ class UniversidadController
 
         $carreras = [$sistemas, $edfisica, $adminempresas, $veterinaria];
 
-
+/*
         $sistemas->addEstudiante(new Estudiante("Andres Santiago", 5));
         $sistemas->addEstudiante(new Estudiante("Alejandro", 1.6));
         $sistemas->addEstudiante(new Estudiante("Raul", 3));
@@ -50,7 +50,7 @@ class UniversidadController
         $veterinaria->addEstudiante(new Estudiante("Diego", 4.5));
         $veterinaria->addEstudiante(new Estudiante("Domenica", 2.8));
         $veterinaria->addEstudiante(new Estudiante("Domenico", 3.2));
-
++*/
         $_SESSION['carreras'] = $carreras;
 
         return $carreras;
